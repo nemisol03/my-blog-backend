@@ -19,13 +19,13 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/posts")
+@RequestMapping("/api/v1/posts")
 public class PostController {
 
     private final PostService postService;
 
     @PostMapping
-    public ResponseEntity<PostDTO> createPost(@RequestBody PostDTO postDTO) throws URISyntaxException {
+    public ResponseEntity<PostDTO> createPost(@RequestBody PostDTO postDTO) {
         PostDTO post = postService.createPost(postDTO);
 //        URI uri = new URI("/api/posts/" + post.getId());
         URI uri = ServletUriComponentsBuilder

@@ -52,7 +52,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public AuthenticationResponse register(RegisterRequest request) {
-        UserRole roleDefault = UserRole.ADMIN; // assign role: user by default
+        UserRole roleDefault = UserRole.USER; // assign role: user by default
         Role role = roleRepo.findByName(roleDefault)
                 .orElseGet(() -> roleRepo.save(new Role(roleDefault)));
 
@@ -61,6 +61,7 @@ public class AuthServiceImpl implements AuthService {
                 .lastName(request.getLastName())
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
+                .address(request.getAddress())
                 .roles(Collections.singleton(role))
                 .build();
         User savedUser = userRepo.save(user);
