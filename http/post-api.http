@@ -1,0 +1,52 @@
+### Register an account
+POST http://localhost:8080/api/v1/auth/register
+Content-Type: application/json
+
+{
+  "firstname":"Doe",
+  "lastname": "John",
+  "address":"New York",
+  "email": "johndoe@gmail.com",
+  "password": "nam123"
+}
+
+> {% client.global.set("auth_token", response.body.token); %}
+
+
+
+
+### get token (login)
+POST http://localhost:8080/api/v1/auth/login
+Content-Type: application/json
+
+{
+  "email":"johndoe@gmail.com",
+  "password": "nam123"
+}
+> {% client.global.set('auth_token',response.body.token); %}
+
+
+### Add new Post
+POST http://localhost:8080/api/v1/posts
+Authorization: Bearer {{auth_token}}
+Content-Type: application/json
+
+{
+  "title": "Exploring the Power of Java and JavaScript",
+  "content": "In this post, we delve into the fascinating world of Java and JavaScript, two powerful programming languages widely used in the software development industry. We'll discuss their key features, differences, and how they complement each other in building robust and interactive applications. Whether you're a seasoned developer or a beginner, join us on this journey to discover the versatility and capabilities of Java and JavaScript.",
+  "description": "A comprehensive exploration of Java and JavaScript, highlighting their key features, differences, and their collaborative potential in software development."
+}
+
+###### update a Post
+#PUT http://localhost:8080/api/v1/posts/1
+#Authorization: Bearer {{auth_token}}
+#Content-Type: application/json
+#
+#{
+#  "title": "How toooooo test API in intellij IDEA? updated by userId =2",
+#  "content": "This is a good question.It's on my mood?"
+#}
+
+### get a specific post by id
+GET http://localhost:8080/api/v1/posts/1
+Authorization: Bearer {{auth_token}}

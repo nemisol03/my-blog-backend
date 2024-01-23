@@ -1,12 +1,9 @@
 package com.springboot.blog.config;
 
-import com.springboot.blog.audit.ApplicationAuditAware;
 import com.springboot.blog.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.domain.AuditorAware;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -40,8 +37,5 @@ public class AppConfig {
 
     }
 
-    @Bean
-    public AuditorAware auditorAware() {
-        return new ApplicationAuditAware();
-    }
+
 }

@@ -25,33 +25,46 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "First name can't be blank")
-    @Length(min = 3, max = 30, message = "First name must be between 3 and 30 characters")
+
     private String firstName;
 
-    @NotBlank(message = "Last name can't be blank")
-    @Length(min = 3, max = 30, message = "Last name must be between 3 and 30 characters")
+
     private String lastName;
 
-    @NotBlank(message = "Email can't be blank")
-    @Length(min = 10, max = 255, message = "Email must be between 10 and 255 characters")
-    @Email(message = "Invalid email format")
+
     @Column(nullable = false,unique = true)
 
     private String email;
 
-    @NotBlank(message = "Password can't be blank")
+
     @Column(length = 64)  // Can be null because OAuth2 authentication can be implemented
     private String password;
 
     private String address;
-    @ManyToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+
+
+
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "users_roles",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
     private Set<Role> roles = new HashSet<>();
+
+
+    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL,orphanRemoval = true)
+    private List<Comment> comments = new ArrayList<>();
+
+
+
+    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL,orphanRemoval = true)
+    private List<Post> posts = new ArrayList<>();
+
+
+    @OneToMany(mappedBy = "user")
+    private List<Token> tokens;
+
 
 
 

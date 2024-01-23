@@ -1,19 +1,14 @@
 package com.springboot.blog.entity;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.springboot.blog.utils.UserEntityListener;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.CreatedBy;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedBy;
-import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
-import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -24,7 +19,7 @@ import java.util.Set;
 @Builder
 @NoArgsConstructor
 @Table(name = "posts")
-@EntityListeners(AuditingEntityListener.class)
+@EntityListeners({AuditingEntityListener.class, UserEntityListener.class})
 public class Post extends AuditingInformation{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,16 +31,15 @@ public class Post extends AuditingInformation{
     @Column(columnDefinition = "TEXT")
     private String content;
 
-
-
-
-
-
-
-
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Comment> comments = new HashSet<>();
+    private Set<Comment> comments ;
 
+    @ManyToOne
+    @JoinColumn(name = "author_id")
+    private User user;
+
+    @JsonIgnore
+    private boolean trashed;
 
     @Override
     public boolean equals(Object o) {

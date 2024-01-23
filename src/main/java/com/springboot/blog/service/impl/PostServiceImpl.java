@@ -1,9 +1,12 @@
 package com.springboot.blog.service.impl;
 
+import com.springboot.blog.entity.Comment;
 import com.springboot.blog.entity.Post;
 import com.springboot.blog.exception.ResourceNotFoundException;
+import com.springboot.blog.payload.CommentDTO;
 import com.springboot.blog.payload.PostDTO;
 import com.springboot.blog.payload.PostResponse;
+import com.springboot.blog.repository.CommentRepository;
 import com.springboot.blog.repository.PostRepository;
 import com.springboot.blog.service.PostService;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +20,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -25,16 +29,17 @@ public class PostServiceImpl implements PostService {
 
     private final ModelMapper modelMapper;
 
+    private final CommentRepository commentRepo;
+
 
     @Override
     public PostDTO createPost(PostDTO postDTO)  {
         Post post = modelMapper.map(postDTO,Post.class);
-
+        post.setTrashed(false);
         Post savedPost = postRepository.save(post);
 
         PostDTO postResponse =modelMapper.map(savedPost,PostDTO.class);
         postResponse.setModifiedDate(null);
-        postResponse.setModifiedBy(null);
         return postResponse;
     }
 
@@ -50,6 +55,8 @@ public class PostServiceImpl implements PostService {
         long totalElements = page.getTotalElements();
         int totalPage = page.getTotalPages();
         boolean isLast = page.isLast();
+
+
         PostResponse postResponse = PostResponse.builder().content(content)
                 .totalElements(totalElements)
                 .totalPage(totalPage)
@@ -66,7 +73,11 @@ public class PostServiceImpl implements PostService {
     @Override
     public PostDTO findById(Long id) throws ResourceNotFoundException {
         Post post = postRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Couldn't find any post with the given id: " + id));
-        return modelMapper.map(post, PostDTO.class);
+        PostDTO postDTO = modelMapper.map(post, PostDTO.class);
+        List<Comment> comments = commentRepo.listHiarchicalCommentsByPost(id);
+        List<CommentDTO> commentDTOs = comments.stream().map(cmt -> modelMapper.map(cmt, CommentDTO.class)).toList();
+        postDTO.setComments(commentDTOs);
+        return postDTO;
     }
 
     @Override
@@ -76,13 +87,11 @@ public class PostServiceImpl implements PostService {
       It will modify the existing Post(both of them point to the same ADDRESS)
      * */
         LocalDateTime createdDate = existingPost.getCreatedDate();
-        Long createBy = existingPost.getCreatedBy();;
         postDT0.setId(id);
         Post post = modelMapper.map(postDT0,Post.class);
         Post savedPost = postRepository.save(post);
         PostDTO postResponse = modelMapper.map(savedPost, PostDTO.class);
         postResponse.setCreatedDate(createdDate);
-        postResponse.setCreatedBy(createBy);
         return postResponse ;
     }
 

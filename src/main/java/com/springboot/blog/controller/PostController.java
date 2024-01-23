@@ -1,21 +1,16 @@
 package com.springboot.blog.controller;
 
 import com.springboot.blog.exception.ResourceNotFoundException;
-import com.springboot.blog.exception.ResponseError;
 import com.springboot.blog.payload.PostDTO;
 import com.springboot.blog.payload.PostResponse;
 import com.springboot.blog.service.PostService;
-import com.springboot.blog.utils.ControllerUtils;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -37,15 +32,14 @@ public class PostController {
     }
 
 
-
     @GetMapping
     public ResponseEntity<?> listByPage(
             @RequestParam(value = "pageNo", required = false, defaultValue = "1") int pageNo,
             @RequestParam(value = "pageSize", required = false, defaultValue = "10") int pageSize,
-            @RequestParam(value = "sortDir",required = false,defaultValue = "asc") String sortDir,
-            @RequestParam(value = "sortField",required = false,defaultValue = "id") String sortField ) {
+            @RequestParam(value = "sortDir", required = false, defaultValue = "asc") String sortDir,
+            @RequestParam(value = "sortField", required = false, defaultValue = "id") String sortField) {
 
-            PostResponse postResponse = postService.listAllPost(pageNo, pageSize,sortDir,sortField);
+        PostResponse postResponse = postService.listAllPost(pageNo, pageSize, sortDir, sortField);
 
         if (postResponse.getContent().isEmpty()) {
             return ResponseEntity.noContent().build();
@@ -60,7 +54,7 @@ public class PostController {
             return new ResponseEntity<>(postDTO, HttpStatus.OK);
 
         } catch (ResourceNotFoundException ex) {
-            return ControllerUtils.handleResourceNotFoundException(ex, id, "Post");
+            return ResponseEntity.notFound().build();
         }
     }
 
@@ -72,7 +66,7 @@ public class PostController {
 
 
         } catch (ResourceNotFoundException ex) {
-            return ControllerUtils.handleResourceNotFoundException(ex, id, "Post");
+            return ResponseEntity.notFound().build();
         }
     }
 
@@ -83,7 +77,7 @@ public class PostController {
             return ResponseEntity.ok().build();
 
         } catch (ResourceNotFoundException ex) {
-            return ControllerUtils.handleResourceNotFoundException(ex, id, "Post");
+            return ResponseEntity.notFound().build();
         }
     }
 
