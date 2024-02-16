@@ -10,16 +10,11 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserDTO {
+public class UserSummary {
     private Long id;
-    private String email;
     @JsonProperty("first_name")
     private String firstName;
     @JsonProperty("last_name")
     private String lastName;
-
     private String avatar;
-    private String address;
-
-    private boolean enabled;
 }

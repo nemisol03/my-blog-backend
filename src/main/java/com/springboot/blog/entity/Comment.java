@@ -20,12 +20,11 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @EntityListeners({AuditingEntityListener.class, UserEntityListener.class})
-public class Comment {
+public class Comment extends AuditableEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String message;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id")
     private Post post;
@@ -35,27 +34,7 @@ public class Comment {
     private User user;
 
 
-    @ManyToOne
-    @JoinColumn(name = "parent_id")
-    private Comment parent;
 
-
-    @OneToMany(mappedBy = "parent",cascade = CascadeType.ALL)
-    private List<Comment> children = new ArrayList<>();
-
-
-
-    @CreatedDate
-    @Column(nullable = false,
-            updatable = false)
-    @JsonProperty("created_date")
-    private LocalDateTime createdDate;
-
-
-    @LastModifiedDate
-    @Column(insertable = false)
-    @JsonProperty("modified_date")
-    private LocalDateTime modifiedDate;
 
 
     @Override
@@ -63,10 +42,8 @@ public class Comment {
         return "Comment{" +
                 "id=" + id +
                 ", message='" + message + '\'' +
-                ", user=" + user.getId() +
-                ", parent=" + (parent != null ? parent.getId().toString() : "null") +
-                ", children=" + children.toString() +
-                '}';
+                ", user=" + user.getId()+", post_id= "
+                +post.getId();
     }
 
 }

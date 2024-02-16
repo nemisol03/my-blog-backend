@@ -3,6 +3,9 @@ package com.springboot.blog.controller;
 import com.springboot.blog.entity.AuthenticationRequest;
 import com.springboot.blog.entity.AuthenticationResponse;
 import com.springboot.blog.entity.RegisterRequest;
+import com.springboot.blog.exception.ErrorDTO;
+import com.springboot.blog.exception.UniqueFieldViolationException;
+import com.springboot.blog.payload.ResponseMessage;
 import com.springboot.blog.service.AuthService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -12,6 +15,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
+
 @RestController
 @RequestMapping("/api/v1/auth")
 @RequiredArgsConstructor
@@ -20,8 +25,18 @@ public class AuthenticationController {
     private final AuthService authService;
 
     @PostMapping("/register")
-    public ResponseEntity<AuthenticationResponse> register(@RequestBody @Valid RegisterRequest req) {
-        return ResponseEntity.ok(authService.register(req));
+    public ResponseEntity<?> register(@RequestBody @Valid RegisterRequest req) {
+        try {
+            authService.register(req);
+            return ResponseEntity.ok(new ResponseMessage("Register successfully!"));
+        } catch (UniqueFieldViolationException e) {
+            ErrorDTO errorDTO = new ErrorDTO();
+            errorDTO.setTimestamp(new Date());
+            errorDTO.setPath("/register");
+            errorDTO.setStatus(HttpStatus.BAD_REQUEST.value());
+            errorDTO.addError(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorDTO);
+        }
     }
 
     @PostMapping("/login")

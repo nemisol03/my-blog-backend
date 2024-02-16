@@ -1,11 +1,9 @@
 package com.springboot.blog.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.security.core.GrantedAuthority;
@@ -16,7 +14,8 @@ import java.util.*;
 
 @Entity
 @Table(name = "users")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -25,22 +24,24 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-
     private String firstName;
-
-
     private String lastName;
 
-
     @Column(nullable = false,unique = true)
-
     private String email;
+    private String avatar;
+    private String description;
 
-
-    @Column(length = 64)  // Can be null because OAuth2 authentication can be implemented
+    @Column(length = 64)  // Can be null because OAuth2 authentication can be implemented later
     private String password;
 
     private String address;
+
+    @JsonIgnore
+    @Column(columnDefinition = "DEFAULT true")
+    private boolean enabled;
+    @JsonIgnore
+    private boolean trashed;
 
 
 
@@ -62,8 +63,8 @@ public class User implements UserDetails {
     private List<Post> posts = new ArrayList<>();
 
 
-    @OneToMany(mappedBy = "user")
-    private List<Token> tokens;
+//    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
+//    private List<Token> tokens;
 
 
 
@@ -99,6 +100,6 @@ public class User implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return enabled;
     }
 }

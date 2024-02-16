@@ -7,11 +7,13 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.CurrentTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Data
@@ -19,27 +21,47 @@ import java.util.Set;
 @Builder
 @NoArgsConstructor
 @Table(name = "posts")
-@EntityListeners({AuditingEntityListener.class, UserEntityListener.class})
-public class Post extends AuditingInformation{
+@EntityListeners(UserEntityListener.class)
+public class Post extends AuditableEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(nullable = false)
     private String title;
-    @Column(columnDefinition = "TEXT")
-    private String description;
+    @Column(nullable = false,unique = true)
+    private String slug;
+
+    
+
     @Column(columnDefinition = "TEXT")
     private String content;
 
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Comment> comments ;
+
+    private String thumbnail;
+    @Enumerated(EnumType.STRING)
+    @Column(columnDefinition = "VARCHAR(255) DEFAULT 'PENDING'")
+    private PostStatus status;
+
+
+    private boolean hot;
+
+
+
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
+    private Set<Comment> comments = new HashSet<>();
 
     @ManyToOne
-    @JoinColumn(name = "author_id")
+    @JoinColumn(name = "user_id",nullable = false)
     private User user;
+
+
+    @ManyToOne
+    @JoinColumn(name = "tag_id",nullable = false)
+    private Tag tag;
 
     @JsonIgnore
     private boolean trashed;
+
 
     @Override
     public boolean equals(Object o) {
@@ -59,7 +81,6 @@ public class Post extends AuditingInformation{
         return "Post{" +
                 "id=" + id +
                 ", title='" + title + '\'' +
-                ", description='" + description + '\'' +
                 ", content='" + content + '\'' +
                 ", comments=" + comments +
                 '}';

@@ -4,7 +4,7 @@ POST http://localhost:8080/api/v1/auth/login
 Content-Type: application/json
 
 {
-    "email":"johndoe@gmail.com",
+    "email":"vuhoainam@gmail.com",
     "password": "nam123"
 }
 > {% client.global.set('auth_token',response.body.token); %}
@@ -15,19 +15,22 @@ Content-Type: application/json
 Authorization: Bearer {{auth_token}}
 
 {
-  "message":"comment here....",
+  "message":"Very straight-to-point article. Really worth time reading. Thank you! But tools are just the instruments for the UX designers. The knowledge of the design tools are as important as the creation of the design strategy.",
   "post_id": 9
 }
 
+
+
 ### update a specific comment
-PUT http://localhost:8080/api/v1/comments/17
+PUT http://localhost:8080/api/v1/comments/1
 Content-Type: application/json
 Authorization: Bearer {{auth_token}}
 
 {
+  "post_id": 9,
   "message": "comment here modified...."
 }
 
 ### delete a comment
-DELETE http://localhost:8080/api/v1/comments/14
+DELETE http://localhost:8080/api/v1/comments/1
 Authorization: Bearer {{auth_token}}

@@ -4,7 +4,6 @@ import com.springboot.blog.exception.ResourceNotFoundException;
 import com.springboot.blog.payload.CommentDTO;
 import com.springboot.blog.service.impl.CommentServiceImpl;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -16,8 +15,6 @@ import java.net.URI;
 @RequestMapping("/api/v1/comments")
 public class CommentController {
     private final CommentServiceImpl commentService;
-
-
     @PostMapping
     public ResponseEntity<?> createCmt(@RequestBody CommentDTO commentDTO) {
         try {
@@ -33,7 +30,7 @@ public class CommentController {
 
     }
 
-    @PutMapping("/{id}")
+    @PatchMapping("/{id}")
     public ResponseEntity<?> updateCmt(@PathVariable("id") Long cmtId,@RequestBody CommentDTO commentDTO) {
         try {
             CommentDTO comment = commentService.updateComment(cmtId, commentDTO);
@@ -55,3 +52,8 @@ public class CommentController {
     }
 
 }
+
+
+
+
+

@@ -7,6 +7,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -32,7 +33,7 @@ public class GlobalHandlerException extends ResponseEntityExceptionHandler {
     @ResponseBody
     public ErrorDTO handleGenericException(HttpServletRequest request, Exception ex) {
 
-        LOGGER.error(ex.getMessage(), ex);
+        LOGGER.error("500: "+ex.getMessage(), ex);
         ErrorDTO errorDTO = new ErrorDTO();
         errorDTO.setTimestamp(new Date());
         errorDTO.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
@@ -47,7 +48,7 @@ public class GlobalHandlerException extends ResponseEntityExceptionHandler {
             HttpHeaders headers,
             HttpStatusCode status,
             WebRequest request) {
-        LOGGER.error(ex.getMessage(), ex);
+        LOGGER.error("400: " +ex.getMessage(), ex);
         ErrorDTO errorDTO = new ErrorDTO();
         errorDTO.setTimestamp(new Date());
         errorDTO.setStatus(HttpStatus.BAD_REQUEST.value());
@@ -63,7 +64,7 @@ public class GlobalHandlerException extends ResponseEntityExceptionHandler {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ResponseBody
     public ErrorDTO handleResourceNotFoundException(HttpServletRequest request, ResourceNotFoundException ex) {
-        LOGGER.error(ex.getMessage(), ex);
+        LOGGER.error("404: "+ ex.getMessage(), ex);
         ErrorDTO errorDTO = new ErrorDTO();
         errorDTO.setTimestamp(new Date());
         errorDTO.setStatus(HttpStatus.NOT_FOUND.value());
@@ -71,6 +72,21 @@ public class GlobalHandlerException extends ResponseEntityExceptionHandler {
         errorDTO.addError("Resource not found: " + ex.getMessage());
         return errorDTO;
     }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public ErrorDTO handleBadCredential(HttpServletRequest request, Exception ex) {
+
+        LOGGER.info(ex.getMessage());
+        ErrorDTO errorDTO = new ErrorDTO();
+        errorDTO.setTimestamp(new Date());
+        errorDTO.setStatus(HttpStatus.BAD_REQUEST.value());
+        errorDTO.setPath(request.getServletPath());
+        errorDTO.addError(ex.getMessage());
+        return errorDTO;
+    }
+
 
 
 }

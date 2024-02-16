@@ -16,11 +16,11 @@ import org.hibernate.validator.constraints.Length;
 public class RegisterRequest {
     @NotBlank(message = "First name can't be blank")
     @Length(min = 2, max = 30, message = "First name must be between 3 and 30 characters")
-    @JsonProperty("firstname")
+    @JsonProperty("first_name")
     private String firstName;
     @NotBlank(message = "Last name can't be blank")
     @Length(min = 2, max = 30, message = "Last name must be between 3 and 30 characters")
-    @JsonProperty("lastname")
+    @JsonProperty("last_name")
     private String lastName;
     @NotBlank(message = "Email can't be blank")
     @Length(min = 10, max = 255, message = "Email must be between 10 and 255 characters")

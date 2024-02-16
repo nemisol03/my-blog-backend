@@ -1,10 +1,10 @@
 package com.springboot.blog.config;
 
-import com.springboot.blog.service.impl.LogoutService;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -25,14 +25,15 @@ public class SecurityConfiguration {
 
     private final AuthenticationProvider authenticationProvider;
 
-    private final LogoutService logoutService;
+//    private final LogoutService logoutService;
 
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(req -> req.requestMatchers("/api/v1/auth/**").permitAll()
+                .authorizeHttpRequests(req -> req.requestMatchers("/api/v1/auth/register","/api/v1/auth/login").permitAll()
+                        .requestMatchers(HttpMethod.GET,"/api/v1/tags/**","/api/v1/posts/**","api/v1/users/**").permitAll()
                         .anyRequest().authenticated())
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
@@ -40,13 +41,13 @@ public class SecurityConfiguration {
                     response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
                     response.getWriter().write(authException.getMessage());
                 }));
-        http.logout(logout -> logout.logoutUrl("/api/v1/logout")
-                .addLogoutHandler(logoutService)
-                .logoutSuccessHandler((
-                        (request, response, authentication)
-                                -> SecurityContextHolder.clearContext())
-                )
-        );
+//        http.logout(logout -> logout.logoutUrl("/api/v1/logout")
+//                .addLogoutHandler(logoutService)
+//                .logoutSuccessHandler((
+//                        (request, response, authentication)
+//                                -> SecurityContextHolder.clearContext())
+//                )
+//        );
 
 
         return http.build();

@@ -1,7 +1,7 @@
 package com.springboot.blog.config;
 
-import com.springboot.blog.entity.Token;
-import com.springboot.blog.repository.TokenRepository;
+//import com.springboot.blog.entity.Token;
+//import com.springboot.blog.repository.TokenRepository;
 import com.springboot.blog.service.impl.JwtService;
 import jakarta.annotation.Nonnull;
 import jakarta.servlet.FilterChain;
@@ -26,7 +26,7 @@ import java.util.Optional;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final JwtService jwtService;
     private final UserDetailsService userDetailsService;
-    private final TokenRepository tokenRepo;
+//    private final TokenRepository tokenRepo;
 
     @Override
     protected void doFilterInternal(@Nonnull HttpServletRequest request,
@@ -43,10 +43,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         userEmail = jwtService.extractUsername(jwt);
         if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = userDetailsService.loadUserByUsername(userEmail);
-            var isTokenValid = tokenRepo.findByToken(jwt)
-                    .map(t -> !t.isExpired() && !t.isRevoked())
-                    .orElse(false);
-            if (jwtService.isTokenValid(jwt, userDetails) && isTokenValid) {
+//            var isTokenValid = tokenRepo.findByToken(jwt)
+//                    .map(t -> !t.isExpired() && !t.isRevoked())
+//                    .orElse(false);
+            if (jwtService.isTokenValid(jwt, userDetails)
+//                    && isTokenValid
+            ) {
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                         userDetails, null, userDetails.getAuthorities()
                 );

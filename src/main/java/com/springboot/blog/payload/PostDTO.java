@@ -10,18 +10,28 @@ import java.util.List;
 public class PostDTO {
     private Long id;
     private String title;
-    private String description;
+    private String slug;
     private String content;
-    @JsonIgnoreProperties({"email","address"})
-    private UserDTO user;
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    private List<CommentDTO> comments;
+
+    private String thumbnail;
+
+    @JsonProperty("user_id")
+    private Long userId;
+
+    private boolean hot;
+
+    @JsonProperty("tag_id")
+     private Long tagId;
+
+    private String status;
+
+
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-    @JsonProperty("created_date")
-    private LocalDateTime createdDate;
+    @JsonProperty("created_at")
+    private LocalDateTime createdAt;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-    @JsonProperty("modified_date")
-    private LocalDateTime modifiedDate;
+    @JsonProperty("updated_at")
+    private LocalDateTime updatedAt;
 
 
 }

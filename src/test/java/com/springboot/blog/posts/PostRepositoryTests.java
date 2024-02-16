@@ -31,7 +31,7 @@ public class PostRepositoryTests {
     public void createNewPost() {
         Post post = new Post();
         post.setTitle("This is a title that is created by user with user's id: 1");
-        post.setDescription("description here...");
+//        post.setDescription("description here...");
         post.setContent("This is a content of the post");
         User user = entityManager.find(User.class,1);
         post.setUser(user);

@@ -1,28 +1,35 @@
 package com.springboot.blog.payload;
 
-import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.springboot.blog.entity.Comment;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Builder;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Getter
-@Setter
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CommentDTO {
+@Builder
+public class FullInfoPost {
     private Long id;
-    private String message;
-    @JsonIgnoreProperties({"email","address","enabled"})
-    private UserDTO user;
+    private String title;
+    private String slug;
+    private String content;
+    private String thumbnail;
 
-    @JsonProperty("post_id")
-    @JsonIdentityReference
-    private Long postId;
+    private UserSummary user;
 
+    private boolean hot;
+    private TagDTO tag;
+    private String status;
+    private int numOfComments;
+
+//    private List<CommentDTO> comments ;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonProperty("created_at")
@@ -30,5 +37,4 @@ public class CommentDTO {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonProperty("updated_at")
     private LocalDateTime updatedAt;
-
 }
