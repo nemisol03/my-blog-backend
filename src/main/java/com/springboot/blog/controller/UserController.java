@@ -3,8 +3,11 @@ package com.springboot.blog.controller;
 import com.springboot.blog.entity.User;
 import com.springboot.blog.exception.ResourceNotFoundException;
 import com.springboot.blog.payload.*;
+import com.springboot.blog.payload.auth.TFARequest;
+import com.springboot.blog.service.AuthService;
 import com.springboot.blog.service.UserService;
 import com.springboot.blog.utils.UploadResource;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -127,4 +130,10 @@ public class UserController {
         return modelMapper.map(user,FullInfoUser.class);
     }
 
+    @PatchMapping("/enable-tfa")
+    public void switchTFA(@RequestBody TFARequest tfaRequest) {
+
+        userService.switchTFAstatus(tfaRequest.getEmail(),tfaRequest.isEnabled());
+
+    }
 }

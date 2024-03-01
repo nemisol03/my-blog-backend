@@ -6,6 +6,7 @@ import com.springboot.blog.payload.*;
 import com.springboot.blog.repository.CommentRepository;
 import com.springboot.blog.repository.PostRepository;
 import com.springboot.blog.repository.UserRepository;
+import com.springboot.blog.service.TwoFactorAuthenticationService;
 import com.springboot.blog.service.UserService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +21,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 
@@ -31,6 +33,7 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
     private final PostRepository postRepo;
     private final CommentRepository commentRepo;
+    private final TwoFactorAuthenticationService tfaService;
 
 
     @Override
@@ -143,5 +146,14 @@ public class UserServiceImpl implements UserService {
         User savedUser = userRepo.save(userFromDB);
 
         return modelMapper.map(savedUser, UserDTO.class);
+    }
+
+    @Override
+    @Transactional
+    public void switchTFAstatus(String email, boolean status) {
+        Optional<User> user = userRepo.findByEmail(email);
+        user.get().setSecret(tfaService.generateNewSecret());
+        userRepo.save(user.get());
+        userRepo.switchTFAstatus(email, status);
     }
 }

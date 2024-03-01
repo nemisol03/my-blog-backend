@@ -31,4 +31,9 @@ public interface UserRepository extends JpaRepository<User,Long> {
     @Query("UPDATE User u SET u.trashed = ?2 WHERE u.id = ?1")
     @Modifying
     void updateTrashed(Long id, boolean trashed);
+
+
+    @Query("UPDATE User u SET u.mfaEnabled  = ?2 where u.email = ?1")
+    @Modifying
+    void switchTFAstatus(String email,boolean enabled);
 }

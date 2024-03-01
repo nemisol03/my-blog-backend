@@ -20,6 +20,7 @@ public class FullInfoUser {
     private String email;
     private String avatar;
     private String address;
+    private boolean mfaEnabled;
 
 
 }

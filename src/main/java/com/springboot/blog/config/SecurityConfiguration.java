@@ -32,7 +32,7 @@ public class SecurityConfiguration {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(req -> req.requestMatchers("/api/v1/auth/register","/api/v1/auth/login").permitAll()
+                .authorizeHttpRequests(req -> req.requestMatchers("/api/v1/auth/register","/api/v1/auth/login","/api/v1/auth/verify").permitAll()
                         .requestMatchers(HttpMethod.GET,"/api/v1/tags/**","/api/v1/posts/**","api/v1/users/**").permitAll()
                         .anyRequest().authenticated())
                 .authenticationProvider(authenticationProvider)

@@ -1,4 +1,4 @@
-package com.springboot.blog.entity;
+package com.springboot.blog.payload.auth;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;

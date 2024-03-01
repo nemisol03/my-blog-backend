@@ -1,4 +1,4 @@
-package com.springboot.blog.entity;
+package com.springboot.blog.payload.auth;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,8 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class AuthenticationRequest {
+public class VerificationRequest {
     private String email;
-    private String password;
-
+    private String code;
 }

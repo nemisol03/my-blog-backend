@@ -1,11 +1,12 @@
 package com.springboot.blog.controller;
 
-import com.springboot.blog.entity.AuthenticationRequest;
-import com.springboot.blog.entity.AuthenticationResponse;
-import com.springboot.blog.entity.RegisterRequest;
+import com.springboot.blog.payload.auth.AuthenticationRequest;
+import com.springboot.blog.payload.auth.AuthenticationResponse;
+import com.springboot.blog.payload.auth.RegisterRequest;
 import com.springboot.blog.exception.ErrorDTO;
 import com.springboot.blog.exception.UniqueFieldViolationException;
 import com.springboot.blog.payload.ResponseMessage;
+import com.springboot.blog.payload.auth.VerificationRequest;
 import com.springboot.blog.service.AuthService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -54,6 +55,12 @@ public class AuthenticationController {
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
+
+    }
+
+    @PostMapping("/verify")
+    public ResponseEntity<?> verifyCode(@RequestBody VerificationRequest verificationRequest) {
+        return ResponseEntity.ok(authService.verifyCode(verificationRequest));
 
     }
 }

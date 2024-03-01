@@ -27,7 +27,7 @@ public class User implements UserDetails {
     private String firstName;
     private String lastName;
 
-    @Column(nullable = false,unique = true)
+    @Column(nullable = false, unique = true)
     private String email;
     private String avatar;
     private String description;
@@ -36,13 +36,14 @@ public class User implements UserDetails {
     private String password;
 
     private String address;
+    private String secret;
+    private boolean mfaEnabled;
 
     @JsonIgnore
     @Column(columnDefinition = "DEFAULT true")
     private boolean enabled;
     @JsonIgnore
     private boolean trashed;
-
 
 
     @ManyToMany(fetch = FetchType.EAGER)
@@ -54,12 +55,11 @@ public class User implements UserDetails {
     private Set<Role> roles = new HashSet<>();
 
 
-    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL,orphanRemoval = true)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments = new ArrayList<>();
 
 
-
-    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL,orphanRemoval = true)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Post> posts = new ArrayList<>();
 
 
@@ -67,12 +67,10 @@ public class User implements UserDetails {
 //    private List<Token> tokens;
 
 
-
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<SimpleGrantedAuthority> authorities = new ArrayList<>();
-        for(var role : roles) {
+        for (var role : roles) {
             authorities.add(new SimpleGrantedAuthority(role.getName().name()));
         }
         return authorities;

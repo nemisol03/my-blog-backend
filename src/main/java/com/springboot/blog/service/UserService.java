@@ -27,4 +27,6 @@ public interface UserService {
     FullInfoUser fetchMe() throws ResourceNotFoundException;
 
     UserDTO updateProfile(UserProfile userProfile) throws ResourceNotFoundException;
+
+    void switchTFAstatus(String email, boolean status);
 }
