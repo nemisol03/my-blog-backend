@@ -1,0 +1,31 @@
+### register an account
+POST http://localhost:8080/api/v1/auth/register
+Content-Type: application/json
+
+{
+  "first_name": "tuan kiet",
+  "last_name": "ho",
+  "email": "hotuankiet@gmail.com",
+  "password": "kiet123"
+}
+
+
+### login
+POST http://localhost:8080/api/v1/auth/login
+Content-Type: application/json
+
+{
+  "email": "hotuankiet@gmail.com",
+  "password": "kiet123"
+}
+> {% client.global.set("auth_token",response.body.token); client.global.set("refresh_token",response.body.refreshToken); %}
+
+
+### get a specific post
+GET http://localhost:8080/api/v1/posts/1
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJmaXJzdE5hbWUiOiJ0dWFuIGtpZXQiLCJsYXN0TmFtZSI6ImhvIiwicm9sZXMiOlsiVVNFUiJdLCJzdWIiOiJob3R1YW5raWV0QGdtYWlsLmNvbSIsImlhdCI6MTcwNjAxMzQ4NCwiZXhwIjoxNzA2MDEzNTQ0fQ.RVd4Y6h0inIL6EwK4rclkP0wLuL1apDWHnlJszdBpWg
+
+### logout
+POST http://localhost:8080/api/v1/logout
+Authorization: Bearer {{auth_token}}
+
