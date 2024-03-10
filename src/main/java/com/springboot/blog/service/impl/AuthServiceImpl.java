@@ -10,8 +10,10 @@ import com.springboot.blog.payload.auth.VerificationRequest;
 import com.springboot.blog.repository.RoleRepository;
 //import com.springboot.blog.repository.TokenRepository;
 import com.springboot.blog.repository.UserRepository;
+import com.springboot.blog.security.oauth2.OAuth2AuthenticationSuccessHandler;
 import com.springboot.blog.service.AuthService;
 import com.springboot.blog.service.TwoFactorAuthenticationService;
+import com.springboot.blog.utils.JwtUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -124,13 +126,7 @@ public class AuthServiceImpl implements AuthService {
         if (userEmail != null) {
             User user = userRepo.findByEmail(userEmail).orElseThrow();
             if (jwtService.isTokenValid(refreshToken, user)) {
-                FullInfoUser fullInfoUser = modelMapper.map(user, FullInfoUser.class);
-                Map<String, Object> claims = new HashMap<>();
-                Set<Role> roles = user.getRoles();
-                List<String> rolesName = roles.stream().map(role -> role.getName().name()).toList();
-                claims.put("user", fullInfoUser);
-                claims.put("roles", rolesName);
-                String token = jwtService.generateToken(claims, user);
+               String token = JwtUtils.constructToken(user, user, modelMapper, jwtService);
 //                revokedAllValidUserToken(user);
 
 //                savedUserToken(user,token);
@@ -157,14 +153,9 @@ public class AuthServiceImpl implements AuthService {
     }
 
     private AuthenticationResponse getAuthenticationResponse(User user) {
-        FullInfoUser fullInfoUser = modelMapper.map(user, FullInfoUser.class);
-        Set<Role> roles = user.getRoles();
-        Map<String, Object> claims = new HashMap<>();
-        List<String> rolesName = roles.stream().map(role -> role.getName().name()).toList();
-        claims.put("user", fullInfoUser);
-        claims.put("roles", rolesName);
-        String token = jwtService.generateToken(claims, user);
-        String refreshToken = jwtService.generateRefreshToken(claims, user);
+
+        String token = JwtUtils.constructToken(user,user,modelMapper,jwtService );
+        String refreshToken = jwtService.generateRefreshToken( user);
 
         return AuthenticationResponse
                 .builder()

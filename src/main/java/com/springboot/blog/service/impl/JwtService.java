@@ -56,9 +56,9 @@ public class JwtService {
         return buildJwt(extractClaims, userDetails, tokenExp);
     }
 
-    public String generateRefreshToken(Map<String, Object> extractClaims,
+    public String generateRefreshToken(
                                        UserDetails userDetails) {
-        return buildJwt(extractClaims,userDetails,refreshTokenExp);
+        return buildJwt(new HashMap<>(),userDetails,refreshTokenExp);
     }
 
     private String buildJwt(Map<String, Object> extractClaims, UserDetails userDetails, long tokenExp) {

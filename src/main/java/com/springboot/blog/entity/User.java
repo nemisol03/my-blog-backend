@@ -1,8 +1,10 @@
 package com.springboot.blog.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.Length;
@@ -24,7 +26,9 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @JsonProperty("first_name")
     private String firstName;
+    @JsonProperty("last_name")
     private String lastName;
 
     @Column(nullable = false, unique = true)
@@ -45,6 +49,27 @@ public class User implements UserDetails {
     @JsonIgnore
     private boolean trashed;
 
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    private AuthProvider authProvider;
+
+    private String providerId;
+
+
+    @Transient
+    public User setName(String name,User user) {
+        String[] words = name.split(" ");
+        if(words.length >1) {
+            String firstName = words[0];
+            String lastName = name.substring(firstName.length());
+            user.setFirstName(firstName);
+            user.setLastName(lastName);
+        }else {
+            user.setFirstName(words[0]);
+            user.setLastName("");
+        }
+        return user;
+    }
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
@@ -55,11 +80,11 @@ public class User implements UserDetails {
     private Set<Role> roles = new HashSet<>();
 
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     private List<Comment> comments = new ArrayList<>();
 
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL,fetch = FetchType.EAGER,orphanRemoval = true)
     private List<Post> posts = new ArrayList<>();
 
 

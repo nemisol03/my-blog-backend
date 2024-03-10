@@ -1,4 +1,4 @@
-package com.springboot.blog.config;
+package com.springboot.blog.security;
 
 //import com.springboot.blog.entity.Token;
 //import com.springboot.blog.repository.TokenRepository;
