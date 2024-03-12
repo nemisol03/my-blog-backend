@@ -1,7 +1,10 @@
 package com.springboot.blog.controller;
 
 import com.springboot.blog.exception.ResourceNotFoundException;
-import com.springboot.blog.payload.*;
+import com.springboot.blog.payload.CommentDTO;
+import com.springboot.blog.payload.FullInfoPost;
+import com.springboot.blog.payload.PageResponse;
+import com.springboot.blog.payload.PostDTO;
 import com.springboot.blog.service.PostService;
 import com.springboot.blog.utils.UploadResource;
 import jakarta.servlet.http.HttpServletRequest;
@@ -41,11 +44,11 @@ public class PostController {
             return ResponseEntity.created(uri).body(post);
         } //check slug must be unique
         catch (DataIntegrityViolationException e) {
-            return ResponseEntity.badRequest().body(new ResponseMessage(e.getMessage()));
+            return ResponseEntity.badRequest().body(e.getMessage());
 
         } // tag must exist
         catch (ResourceNotFoundException | InvalidDataAccessApiUsageException e) {
-            return ResponseEntity.badRequest().body(new ResponseMessage(e.getMessage()));
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
@@ -161,7 +164,7 @@ public class PostController {
         } catch (ResourceNotFoundException ex) {
             return ResponseEntity.notFound().build();
         } catch (DataIntegrityViolationException e) {
-            return ResponseEntity.badRequest().body(new ResponseMessage(e.getMessage()));
+            return ResponseEntity.badRequest().body(e.getMessage());
 
         }
     }
@@ -196,7 +199,7 @@ public class PostController {
             return ResponseEntity.ok().build();
 
         } catch (ResourceNotFoundException ex) {
-            return ResponseEntity.status(404).body(new ResponseMessage(ex.getMessage()));
+            return ResponseEntity.status(404).body(ex.getMessage());
         }
     }
     @GetMapping("/hot")

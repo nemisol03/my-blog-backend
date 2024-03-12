@@ -22,7 +22,7 @@ public class Role {
     @Column(length = 128,nullable = false,unique = true)
     @Enumerated(EnumType.STRING)
     private UserRole name;
-    @Length(min=10,max = 255,message = "The description must be greater or equals 10 characters")
+    @Length(min=10,max = 255,message = "The description must be greater or equal 10 characters")
     private String description;
 
     public Role(UserRole name) {

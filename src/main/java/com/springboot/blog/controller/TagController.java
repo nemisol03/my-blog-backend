@@ -3,7 +3,6 @@ package com.springboot.blog.controller;
 import com.springboot.blog.entity.Tag;
 import com.springboot.blog.exception.ResourceInUseException;
 import com.springboot.blog.exception.ResourceNotFoundException;
-import com.springboot.blog.payload.ResponseMessage;
 import com.springboot.blog.payload.TagDTO;
 import com.springboot.blog.service.TagService;
 import jakarta.validation.Valid;
@@ -27,7 +26,7 @@ public class TagController {
     public ResponseEntity<?> getAllTags() {
         List<Tag> tagList = tagService.listAllTag();
         if (tagList.isEmpty()) {
-            return new ResponseEntity<>(new ResponseMessage("Tags is empty!"), HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>("Tags is empty!", HttpStatus.NO_CONTENT);
         }
         return ResponseEntity.ok(tagList);
     }
@@ -53,7 +52,7 @@ public class TagController {
                     .toUri();
             return ResponseEntity.created(uri).body(tag);
         } catch (ResourceInUseException ex) {
-            return ResponseEntity.badRequest().body(new ResponseMessage(ex.getMessage()));
+            return ResponseEntity.badRequest().body(ex.getMessage());
         }
     }
 
@@ -63,9 +62,9 @@ public class TagController {
             tagService.deleteTag(id);
             return ResponseEntity.ok().build();
         } catch (ResourceNotFoundException e) {
-            return new ResponseEntity<>(new ResponseMessage(e.getMessage()), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }catch (DataIntegrityViolationException e) {
-            return new ResponseEntity<>(new ResponseMessage(e.getMessage()), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
 
         }
     }
@@ -76,7 +75,7 @@ public class TagController {
             TagDTO tag  = tagService.updateTag(id,tagDTO);
         return ResponseEntity.ok(tag);
         } catch (ResourceNotFoundException e) {
-            return new ResponseEntity<>(new ResponseMessage(e.getMessage()),HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(e.getMessage(),HttpStatus.NOT_FOUND);
         }
     }
     @GetMapping("/count")

@@ -29,4 +29,6 @@ public interface UserService {
     UserDTO updateProfile(UserProfile userProfile) throws ResourceNotFoundException;
 
     void switchTFAstatus(String email, boolean status);
+
+    void confirmEmail(String email);
 }

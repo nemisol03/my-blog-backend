@@ -17,6 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -155,5 +156,12 @@ public class UserServiceImpl implements UserService {
         user.get().setSecret(tfaService.generateNewSecret());
         userRepo.save(user.get());
         userRepo.switchTFAstatus(email, status);
+    }
+
+    @Override
+    public void confirmEmail(String email) {
+        User user = userRepo.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        user.setConfirmedEmail(true);
+        userRepo.save(user);
     }
 }

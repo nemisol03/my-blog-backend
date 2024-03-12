@@ -35,7 +35,7 @@ public class UserController {
             UserProfile user = userService.findById(id);
             return ResponseEntity.ok(user);
         } catch (ResourceNotFoundException e) {
-            return new ResponseEntity<>(new ResponseMessage(e.getMessage()), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
 
@@ -70,7 +70,7 @@ public class UserController {
             return ResponseEntity.ok(savedUser);
         }
         catch (ResourceNotFoundException e) {
-            return ResponseEntity.badRequest().body(new ResponseMessage(e.getMessage()));
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
     @PatchMapping("/{id}/status/{enabled}")
@@ -80,7 +80,7 @@ public class UserController {
             userService.updateEnabled(id, enabled);
             return ResponseEntity.ok().build();
         } catch (ResourceNotFoundException e) {
-            return ResponseEntity.status(404).body(new ResponseMessage(e.getMessage()));
+            return ResponseEntity.status(404).body(e.getMessage());
         }
     }
 
@@ -91,7 +91,7 @@ public class UserController {
             return ResponseEntity.ok().build();
 
         } catch (ResourceNotFoundException ex) {
-            return ResponseEntity.status(404).body(new ResponseMessage(ex.getMessage()));
+            return ResponseEntity.status(404).body(ex.getMessage());
         }
     }
 
@@ -101,7 +101,7 @@ public class UserController {
             userService.trashUser(id);
             return ResponseEntity.ok().build();
         } catch (ResourceNotFoundException e) {
-            return ResponseEntity.status(404).body(new ResponseMessage(e.getMessage()));
+            return ResponseEntity.status(404).body(e.getMessage());
         }
     }
     @DeleteMapping("/{id}/delete-permanently")
@@ -110,7 +110,7 @@ public class UserController {
             userService.deleteUser(id);
             return ResponseEntity.ok().build();
         } catch (ResourceNotFoundException e) {
-            return ResponseEntity.status(404).body(new ResponseMessage(e.getMessage()));
+            return ResponseEntity.status(404).body(e.getMessage());
         }
     }
 

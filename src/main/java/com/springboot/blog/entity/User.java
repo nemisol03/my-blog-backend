@@ -43,11 +43,14 @@ public class User implements UserDetails {
     private String secret;
     private boolean mfaEnabled;
 
+
     @JsonIgnore
-    @Column(columnDefinition = "DEFAULT true")
+    @Column(columnDefinition = "DEFAULT false")
     private boolean enabled;
     @JsonIgnore
     private boolean trashed;
+
+    private boolean confirmedEmail;
 
     @NotNull
     @Enumerated(EnumType.STRING)
@@ -73,6 +76,7 @@ public class User implements UserDetails {
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
+
             name = "users_roles",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id")
