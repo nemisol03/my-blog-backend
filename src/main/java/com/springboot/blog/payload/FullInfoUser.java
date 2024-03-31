@@ -2,6 +2,7 @@ package com.springboot.blog.payload;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.springboot.blog.entity.AuthProvider;
 import jakarta.persistence.Column;
 import lombok.*;
